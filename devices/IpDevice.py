@@ -10,7 +10,7 @@ from core.webui.model.OnDeviceClickReaction import OnDeviceClickReaction
 from flask import jsonify
 from icmplib import ping
 from pathlib import Path
-from typing import Dict, Optional, Union
+from typing import Dict, Union
 
 
 class IpDevice(Device):
@@ -34,25 +34,20 @@ class IpDevice(Device):
 			'abilities'             : []
 		}
 
-	def getDeviceIcon(self, path: Optional[Path] = None) -> Path:
+	def getDeviceIcon(self) -> Path:
 		# ping now and decide on icon
 		# enhancement: ping periodically and update
 		# easy: onFiveMinutes
 		# hard: custom setting
-		icon = ''
 		if self.getConfig('ip'):
 			try:
 				if self.pingMe():
-					icon = Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice_connected.png')
+					return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice_connected.png')
 				else:
-					icon = Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice_disconnected.png')
+					return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice_disconnected.png')
 			except:
 				pass
-
-		if not icon:
-			icon = Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice.png')
-
-		return super().getDeviceIcon(icon)
+		return Path(f'{self.Commons.rootDir()}/skills/{self.skillName}/devices/img/IpDevice.png')
 
 
 	def onUIClick(self) -> dict:
